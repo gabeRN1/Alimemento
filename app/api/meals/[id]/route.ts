@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 // Função para excluir uma refeição com base no ID
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = params; // Aqui pegamos o 'id' da URL
+    const { id } = params;
 
     if (!ObjectId.isValid(id)) {
       return new NextResponse(
@@ -17,7 +17,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     const client = await clientPromise;
     const db = client.db("ProjectAlimentation");
 
-    // Deleta a refeição com o ObjectId correspondente
     const result = await db.collection("meals").deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {
@@ -41,6 +40,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
+
     if (!ObjectId.isValid(id)) {
       return new NextResponse(
         JSON.stringify({ error: "ID inválido" }),
@@ -49,13 +49,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 
     const body = await req.json();
-
-    // Remover o campo '_id' do corpo da requisição
     const { _id, ...updatedData } = body;
 
-    // Verifica e converte campos necessários
-    const calories = Number(updatedData.calories);  // Converte para número
-    const dateTime = new Date(updatedData.dateTime); // Converte para Date
+    // Converte as propriedades conforme necessário
+    const calories = Number(updatedData.calories);
+    const dateTime = new Date(updatedData.dateTime);
 
     if (isNaN(calories)) {
       return new NextResponse(
@@ -64,7 +62,6 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       );
     }
 
-    // Verificar se a data é válida
     if (isNaN(dateTime.getTime())) {
       return new NextResponse(
         JSON.stringify({ error: "Data inválida" }),
@@ -75,7 +72,6 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const client = await clientPromise;
     const db = client.db("ProjectAlimentation");
 
-    // Realiza a atualização sem o campo _id
     const result = await db.collection("meals").updateOne(
       { _id: new ObjectId(id) },
       { $set: { ...updatedData, calories, dateTime } }
