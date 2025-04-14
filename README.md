@@ -40,12 +40,20 @@ O histórico mostra todas as refeições registradas até o momento. Os usuário
 
     Editar ou excluir refeições.
 
-4. Cálculo de Calorias Totais
+4. Filtros e Ordenação
+
+Os usuários podem filtrar as refeições por:
+
+    Tipo de refeição: Como Café da manhã, Almoço, Lanche, Jantar.
+
+    Data: Filtrando as refeições por data de registro.
+
+    Calorias: Filtrando ou ordenando as refeições por calorias.
+
+Além disso, é possível ordenar as refeições pelo nome, calorias ou data, clicando nas colunas da tabela.
+5. Cálculo de Calorias Totais
 
 O sistema calcula automaticamente o total de calorias consumidas a partir das refeições registradas. O total de calorias é mostrado no painel principal.
-5. Filtros e Ordenação
-
-Os usuários podem filtrar as refeições por tipo e data. Além disso, é possível ordenar as refeições pelo nome, calorias ou data, clicando nas colunas da tabela.
 6. Modos de Visualização
 
 O sistema possui três modos de visualização:
@@ -57,15 +65,30 @@ O sistema possui três modos de visualização:
     Histórico: Para visualizar e gerenciar todas as refeições registradas.
 
 Como Funciona
+Estrutura do Next.js com App Router
 
-O código React na página DashboardPage é a principal interface do usuário, responsável pela interação com as refeições. Ele utiliza o estado para controlar o conteúdo da página, incluindo as refeições registradas, planejadas e os formulários de entrada. O código também realiza operações com a API para salvar, editar, excluir e consultar as refeições.
+Este projeto foi desenvolvido utilizando o Next.js com App Router (/app), o que permite uma estrutura moderna para organização de páginas, componentes e API Routes dentro de uma única estrutura. As funcionalidades da aplicação são divididas em:
+
+    Páginas: As páginas são gerenciadas através da pasta /app, como app/dashboard/page.tsx para a página do painel principal e app/login/page.tsx para a página de login.
+
+    API Routes: A API interna do Next.js permite a interação com o banco de dados e manipulação das refeições através de rotas criadas na pasta app/api.
+
+Conexão com MongoDB Atlas
+
+A aplicação utiliza MongoDB Atlas como banco de dados na nuvem. O MongoDB armazena as informações das refeições, permitindo o registro, planejamento, consulta e exclusão de dados dos usuários.
+
+    A conexão com o MongoDB é realizada no arquivo app/lib/mongodb.ts, onde são configurados os parâmetros de acesso e as operações de banco de dados.
+
+Deploy no Vercel
+
+A aplicação foi deployada no Vercel, uma plataforma de deploy com integração direta ao Next.js. O Vercel permite a hospedagem de aplicações Next.js com otimizações automáticas e CI/CD integrado. O deploy foi feito diretamente do repositório GitHub para o Vercel.
 Fluxo de Dados
 
     Usuário Logado: O sistema depende da ID do usuário para buscar as refeições associadas a esse usuário no banco de dados. A ID é armazenada no localStorage para identificar o usuário em sessões subsequentes.
 
     Formulários Dinâmicos: O estado do formulário é atualizado conforme o usuário preenche os campos. Ao submeter o formulário, as informações são enviadas para a API (POST para criar ou PUT para editar).
 
-    API: A aplicação faz requisições para endpoints da API para manipular as refeições. A API é responsável por interagir com o banco de dados, realizar as operações CRUD (Create, Read, Update, Delete) e retornar os dados necessários.
+    API: A aplicação faz requisições para endpoints da API (localizados na pasta /app/api) para manipular as refeições. A API é responsável por interagir com o banco de dados MongoDB, realizar as operações CRUD (Create, Read, Update, Delete) e retornar os dados necessários.
 
 Funções do Código
 
@@ -79,6 +102,10 @@ Funções do Código
 
     handleEdit: Função para editar uma refeição existente.
 
+    handleFilterByType: Função que permite filtrar as refeições pelo tipo (Café da manhã, Almoço, Lanche, Jantar).
+
+    handleSort: Função para ordenar as refeições por nome, calorias ou data.
+
 Exemplo de Uso
 
     Registrar uma Refeição: Ao acessar a página inicial, o usuário pode preencher o formulário de refeição. Após o envio, a refeição será salva e aparecerá no histórico.
@@ -87,31 +114,38 @@ Exemplo de Uso
 
     Visualizar Histórico: O usuário pode ver todas as refeições registradas, ordenar por nome, calorias ou data e excluir ou editar as refeições.
 
+    Filtrar Refeições: O usuário pode usar a funcionalidade de filtro para exibir apenas as refeições de um tipo específico, como "Almoço" ou "Café da manhã", facilitando a visualização do histórico de refeições planejadas ou registradas.
+
 Tecnologias Utilizadas
 
-    React: Framework para construção da interface do usuário.
+    Next.js com App Router: Framework para construção de aplicações full-stack com renderização no lado do servidor, utilizando o novo sistema de rotas baseado em pastas (/app).
+
+    API Routes do Next.js: Endpoints para realizar operações CRUD com o banco de dados e interação com a interface do usuário.
+
+    MongoDB Atlas: Banco de dados na nuvem para armazenar as informações das refeições.
 
     Tailwind CSS: Biblioteca de estilos para criação de layouts responsivos e customizados.
 
-    API: Endpoints que interagem com um banco de dados para CRUD das refeições.
+    Vercel: Plataforma de deploy para aplicações Next.js, com integração CI/CD.
 
 Dependências
 
-    react
-
-    react-dom
+    next
 
     tailwindcss
 
+    mongodb (diretamente, sem Mongoose)
+
 Instruções de Instalação
-1. Clone o Repositório
+
+    Clone o Repositório
 
 Clone este repositório para o seu computador:
 
 git clone https://github.com/your-username/alimemento.git
 cd alimemento
 
-2. Instale as Dependências
+    Instale as Dependências
 
 Instale as dependências utilizando npm ou yarn:
 
@@ -119,7 +153,13 @@ npm install
 # ou
 yarn install
 
-3. Execute o Projeto
+    Configuração do MongoDB
+
+Certifique-se de configurar as variáveis de ambiente para conectar o MongoDB Atlas. Crie um arquivo .env.local na raiz do projeto e adicione a variável MONGODB_URI com a URL de conexão do seu banco MongoDB Atlas:
+
+MONGODB_URI=mongodb+srv://<usuário>:<senha>@cluster0.mongodb.net/alimemento
+
+    Execute o Projeto
 
 Para rodar o projeto em modo de desenvolvimento, use o comando:
 

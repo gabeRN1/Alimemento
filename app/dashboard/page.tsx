@@ -197,28 +197,36 @@ export default function DashboardPage() {
       direction = 'desc';
     }
     setSortConfig({ key, direction });
-
-    const sortedMeals = [...filteredMeals].sort((a, b) => {
-      if (key === 'calories') {
-        return direction === 'asc' ? a.calories - b.calories : b.calories - a.calories;
-      } else if (key === 'dateTime') {
-        const dateA = new Date(a[key]);
-        const dateB = new Date(b[key]);
-        return direction === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
-      } else {
-        const valA = a[key].toString().toLowerCase();
-        const valB = b[key].toString().toLowerCase();
-        if (valA < valB) return direction === 'asc' ? -1 : 1;
-        if (valA > valB) return direction === 'asc' ? 1 : -1;
-        return 0;
-      }
-    });
-
-    setMeals(sortedMeals);
+  
+    // Filtra as refeições antes de ordenar
+    const filteredAndSortedMeals = meals
+      .filter((meal) => {
+        const matchesType = filterType ? meal.type === filterType : true; // Filtro por tipo
+        return matchesType;
+      })
+      .sort((a, b) => {
+        if (key === 'calories') {
+          return direction === 'asc' ? a.calories - b.calories : b.calories - a.calories;
+        } else if (key === 'dateTime') {
+          const dateA = new Date(a[key]);
+          const dateB = new Date(b[key]);
+          return direction === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+        } else {
+          const valA = a[key].toString().toLowerCase();
+          const valB = b[key].toString().toLowerCase();
+          if (valA < valB) return direction === 'asc' ? -1 : 1;
+          if (valA > valB) return direction === 'asc' ? 1 : -1;
+          return 0;
+        }
+      });
+  
+    // Atualiza o estado com as refeições ordenadas
+    setMeals(filteredAndSortedMeals);
   };
 
   const currentDate = new Date().toISOString().split('T')[0];
 
+  
   return (
     <main className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#A2BF63] to-[#D9BD8B]">
       <div className="w-full h-full md:w-3/4 lg:w-2/3 xl:w-1/2 bg-white p-8 rounded-lg shadow-2xl flex flex-col justify-center space-y-8">
@@ -392,20 +400,36 @@ export default function DashboardPage() {
         ) : (
           // HISTÓRICO DE REFEIÇÕES
           <>
-            <div className="overflow-x-auto">
-              <table className="min-w-full table-auto">
-                <thead>
-                  <tr className="bg-[#A2BF63] text-white">
-                    <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort('name')}>Nome</th>
-                    <th className="px-4 py-2">Descrição</th>
-                    <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort('calories')}>Calorias</th>
-                    <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort('dateTime')}>Data</th>
-                    <th className="px-4 py-2">Tipo</th>
-                    <th className="px-4 py-2">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredMeals.map((meal) => (
+          <div className="flex justify-between mb-4">
+            {/* Filtro por Tipo de Refeição */}
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="border-2 border-[#36593F] px-4 py-2 rounded-lg text-black"
+            >
+              <option value="">Todos os Tipos</option>
+              <option value="Café da manhã">Café da manhã</option>
+              <option value="Almoço">Almoço</option>
+              <option value="Lanche">Lanche</option>
+              <option value="Jantar">Jantar</option>
+            </select>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto">
+              <thead>
+                <tr className="bg-[#A2BF63] text-white">
+                  <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort('name')}>Nome</th>
+                  <th className="px-4 py-2">Descrição</th>
+                  <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort('calories')}>Calorias</th>
+                  <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort('dateTime')}>Data</th>
+                  <th className="px-4 py-2">Tipo</th>
+                  <th className="px-4 py-2">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMeals.length > 0 ? (
+                  filteredMeals.map((meal) => (
                     <tr key={meal._id} className="border-t text-[#36593F]">
                       <td className="px-4 py-2">{meal.name}</td>
                       <td className="px-4 py-2">{meal.description}</td>
@@ -417,14 +441,19 @@ export default function DashboardPage() {
                         <button onClick={() => handleDelete(meal._id)} className="text-red-500 hover:text-red-700">Excluir</button>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="text-center mt-4 font-bold text-[#36593F]">
-              Total de Calorias: {totalCalories} kcal
-            </div>
-          </>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="text-center px-4 py-2">Nenhuma refeição registrada.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="text-center mt-4 font-bold text-[#36593F]">
+            Total de Calorias: {totalCalories} kcal
+          </div>
+        </>
         )}
 
         <div className="flex justify-center space-x-4 mt-6">
