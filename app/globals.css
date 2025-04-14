@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* Cores base */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  /* 🎨 Paleta personalizada */
+  --color-primary: #D9042B;     /* vermelho vibrante */
+  --color-secondary: #BF0436;   /* vermelho escuro */
+  --color-darkgreen: #36593F;   /* verde escuro */
+  --color-lime: #A2BF63;        /* verde mais claro */
+  --color-sand: #D9BD8B;        /* bege claro */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Expondo a paleta pro theme se necessário */
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-darkgreen: var(--color-darkgreen);
+  --color-lime: var(--color-lime);
+  --color-sand: var(--color-sand);
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+
+    /* (Opcional) versão escura da paleta, se quiser customizar */
+    /* --color-primary: #...; */
+  }
+}
+
+/* Base styling */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* Glow effect on hover for buttons (SUAVIZADO) */
+.glow-btn {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 50px;
+}
+
+.glow-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.12)
+  ); /* Brilho mais sutil */
+  transition: all 0.4s ease;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.glow-btn:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.glow-btn:hover {
+  color: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.2),
+              0 0 10px rgba(255, 255, 255, 0.15),
+              0 0 14px rgba(255, 255, 255, 0.1);
+  border: 2px solid transparent;
+}
