@@ -226,6 +226,23 @@ export default function DashboardPage() {
 
   const currentDate = new Date().toISOString().split('T')[0];
 
+  // Função para calcular o total de calorias por dia
+  const calculateTotalCaloriesPerDay = () => {
+    const caloriesPerDay: Record<string, number> = {};
+
+    meals.forEach((meal) => {
+      const date = new Date(meal.dateTime).toISOString().split('T')[0];
+      if (!caloriesPerDay[date]) {
+        caloriesPerDay[date] = 0;
+      }
+      caloriesPerDay[date] += meal.calories;
+    });
+
+    return caloriesPerDay;
+  };
+
+  const caloriesPerDay = calculateTotalCaloriesPerDay();
+
   
   return (
     <main className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#A2BF63] to-[#D9BD8B]">
@@ -451,8 +468,12 @@ export default function DashboardPage() {
             </table>
           </div>
           <div className="text-center mt-4 font-bold text-[#36593F]">
-            Total de Calorias: {totalCalories} kcal
-          </div>
+  {Object.keys(caloriesPerDay).map((date) => (
+    <div key={date}>
+      Total de Calorias para {new Date(date).toLocaleDateString()}: {caloriesPerDay[date]} kcal
+    </div>
+  ))}
+</div>
         </>
         )}
 
