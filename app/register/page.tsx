@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Head from "next/head"; 
 
 export default function RegisterPage() {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -24,6 +25,14 @@ export default function RegisterPage() {
     };
 
     return (
+        <>
+        <Head>
+            <title>Alimemento - Registro</title>
+            <meta name="description" content="Alimemento um app para nunca mais se esquecer o que comeu ontem" /> 
+            <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+            <link rel="icon" href="public/icon/icon-alimemento.ico" /> 
+        </Head>
+
         <main
             className="min-h-screen flex items-center justify-center"
             style={{
@@ -65,5 +74,6 @@ export default function RegisterPage() {
                 </p>
             </div>
         </main>
+    </>
     );
 }
