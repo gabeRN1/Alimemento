@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: any) => {
@@ -44,14 +45,24 @@ export default function LoginPage() {
             className="w-full border border-[#A2BF63] focus:border-[#BF0436] px-4 py-2 rounded-full outline-none transition duration-200  text-green-600 focus:text-black"
             required
           />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={form.password}
-            onChange={e => setForm({ ...form, password: e.target.value })}
-            className="w-full border border-[#A2BF63] focus:border-[#BF0436] px-4 py-2 rounded-full outline-none transition duration-200 text-green-600 focus:text-black"
-            required
-          />
+            <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Senha"
+              value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+              className="w-full border border-[#A2BF63] focus:border-[#BF0436] px-4 py-2 rounded-full outline-none transition duration-200 text-green-600 focus:text-black pr-10"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(prev => !prev)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl cursor-pointer"
+              title={showPassword ? 'Esconder senha' : 'Mostrar senha'}
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
           <button
             type="submit"
             className="w-full glow-btn bg-[#A2BF63] text-white font-semibold py-2 rounded-full hover:bg-[#36593F] hover:border-transparent transition-all"

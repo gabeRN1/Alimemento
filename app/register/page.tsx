@@ -6,6 +6,7 @@ import Head from "next/head";
 
 export default function RegisterPage() {
     const [form, setForm] = useState({ email: '', password: '' });
+    const [showPassword, setShowPassword] = useState(false); 
     const router = useRouter();
 
     const handleSubmit = async (e: any) => {
@@ -49,13 +50,23 @@ export default function RegisterPage() {
                         onChange={e => setForm({ ...form, email: e.target.value })}
                         className="w-full border border-[#A2BF63] focus:border-[#BF0436] px-4 py-2 rounded-full outline-none transition duration-200 text-green-600 focus:text-black"
                     />
-                    <input
-                        type="password"
-                        placeholder="Senha"
-                        value={form.password}
-                        onChange={e => setForm({ ...form, password: e.target.value })}
-                        className="w-full border border-[#A2BF63] focus:border-[#BF0436] px-4 py-2 rounded-full outline-none transition duration-200 text-green-600 focus:text-black"
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Senha"
+                            value={form.password}
+                            onChange={e => setForm({ ...form, password: e.target.value })}
+                            className="w-full border border-[#A2BF63] focus:border-[#BF0436] px-4 py-2 rounded-full outline-none transition duration-200 text-green-600 focus:text-black pr-10"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-[#BF0436] hover:text-[#A2BF63]"
+                        >
+                            {showPassword ? '🙈' : '👁️'}
+                        </button>
+                    </div>
+
                     <button
                         type="submit"
                         className="w-full bg-[#A2BF63] text-white px-6 py-3 rounded-full font-semibold transition-all hover:bg-[#36593F] hover:border-[#36593F] hover:text-white"
