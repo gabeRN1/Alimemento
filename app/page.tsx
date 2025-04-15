@@ -61,7 +61,7 @@ export default function HomePage() {
         {/* Botão "Saiba Mais" com animação contínua de setinha */}
         <button
           onClick={scrollToAbout}
-          className="text-[#36593F] font-semibold hover:text-[#A2BF63] transition-all flex items-center gap-1 mt-10"
+          className="text-[#5dbe75] font-semibold hover:text-[#A2BF63] transition-all flex items-center gap-1 mt-10"
           style={{
             background: 'none', // Sem fundo
             border: 'none', // Sem borda

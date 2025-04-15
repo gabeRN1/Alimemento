@@ -19,9 +19,7 @@ export default function RegisterPage() {
 
         if (res.ok) {
             router.push('/login');
-        } else {
-            alert("Erro ao registrar");
-        }
+        } 
     };
 
     return (
